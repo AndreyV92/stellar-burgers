@@ -54,10 +54,14 @@ export const makeBurgerSlice = createSlice({
           state.ingredients[index]
         ];
       }
+    },
+    cleanIngridients: (state) => {
+      state.ingredients = [];
+      state.bun = null;
     }
   }
 });
 
-export const { addItem, upItem, deleteItem, downItem } =
+export const { addItem, upItem, deleteItem, downItem, cleanIngridients } =
   makeBurgerSlice.actions;
 export const makeBurgerReducer = makeBurgerSlice.reducer;

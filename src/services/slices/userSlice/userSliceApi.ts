@@ -11,8 +11,7 @@ import {
   TLoginData
 } from '@api';
 
-import { getCookie, setCookie, deleteCookie } from '../../../utils/cookie';
-import { refreshToken } from '../../../utils/burger-api';
+import { setCookie } from '../../../utils/cookie';
 
 export const registerUser = createAsyncThunk(
   'user/register',

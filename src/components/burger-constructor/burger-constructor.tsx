@@ -7,15 +7,12 @@ import {
   closeModalOrderSubmit,
   fetchOrderSubmit
 } from '../../services/slices/orderSubmitSlice/orderSubmitSlice';
+import { cleanIngridients } from '../../services/slices/makeBurgerSlise/makeBurgerSlise';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // useSelector(() => {
-
-  // })
 
   const constructorItems = useSelector((state) => state.makeBurger);
   const user = useSelector((state) => state.user.userData);
@@ -41,7 +38,7 @@ export const BurgerConstructor: FC = () => {
           ...constructorItems.ingredients.map((el) => el._id),
           constructorItems.bun._id
         ])
-      );
+      ).then(() => dispatch(cleanIngridients()));
     }
   };
   const closeOrderModal = () => {

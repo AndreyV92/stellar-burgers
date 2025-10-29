@@ -21,9 +21,8 @@ export const ForgotPassword: FC = () => {
         localStorage.setItem('resetPassword', 'true');
         navigate('/reset-password', { replace: true });
       })
+      .then(() => dispatch(forgotPass({ email: email })))
       .catch((err) => setError(err));
-
-    dispatch(forgotPass({ email: email }));
   };
 
   return (
