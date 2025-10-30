@@ -11,7 +11,7 @@ import {
   TLoginData
 } from '@api';
 
-import { setCookie } from '../../../utils/cookie';
+import { deleteCookie, setCookie } from '../../../utils/cookie';
 
 export const registerUser = createAsyncThunk(
   'user/register',
@@ -64,5 +64,9 @@ export const updateUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk('user/logout', async () => {
   const response = await logoutApi();
+  if (response) {
+    localStorage.removeItem('refreshToken');
+    deleteCookie('accessToken');
+  }
   return response;
 });

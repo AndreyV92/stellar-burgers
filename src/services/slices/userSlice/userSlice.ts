@@ -133,6 +133,7 @@ const userSlice = createSlice({
         if (action.payload.success === true) {
           state.userData = null;
           state.userDataError = null;
+          state.isAuthenticated = false;
         } else {
           state.userDataError = 'Ошибка при выходе из аккаунта';
         }
