@@ -7,29 +7,49 @@ import {
   Logo,
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
+import { Link, useLocation } from 'react-router-dom';
 
-export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
-  <header className={styles.header}>
-    <nav className={`${styles.menu} p-4`}>
-      <div className={styles.menu_part_left}>
-        <>
-          <BurgerIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
-        </>
-        <>
-          <ListIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2'>Лента заказов</p>
-        </>
-      </div>
-      <div className={styles.logo}>
-        <Logo className='' />
-      </div>
-      <div className={styles.link_position_last}>
-        <ProfileIcon type={'primary'} />
-        <p className='text text_type_main-default ml-2'>
-          {userName || 'Личный кабинет'}
-        </p>
-      </div>
-    </nav>
-  </header>
-);
+export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
+  const param = useLocation()?.pathname;
+
+  return (
+    <header className={styles.header}>
+      <nav className={`${styles.menu} p-4`}>
+        <div className={styles.menu_part_left}>
+          <>
+            <BurgerIcon type={'primary'} />
+            <Link
+              to={'/'}
+              className={`${styles.link} ${param === '/' ? styles.link_active : ''} text text_type_main-default ml-2 mr-10`}
+            >
+              Конструктор
+            </Link>
+          </>
+          <>
+            <ListIcon type={'primary'} />
+            <Link
+              to={'/feed'}
+              className={`${styles.link} ${param === '/feed' ? styles.link_active : ''} text text_type_main-default ml-2`}
+            >
+              Лента заказов
+            </Link>
+          </>
+        </div>
+        <div className={styles.logo}>
+          <Link to={'/'}>
+            <Logo className='' />
+          </Link>
+        </div>
+        <div className={styles.link_position_last}>
+          <ProfileIcon type={'primary'} />
+          <Link
+            to={userName ? '/profile' : '/login'}
+            className={`${styles.link} ${param === '/profile' || param === '/login' ? styles.link_active : ''} text text_type_main-default ml-2`}
+          >
+            {userName || 'Личный кабинет'}
+          </Link>
+        </div>
+      </nav>
+    </header>
+  );
+};
