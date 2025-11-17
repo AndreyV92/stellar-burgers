@@ -48,9 +48,10 @@ export const makeBurgerSlice = createSlice({
       const index = state.ingredients.findIndex(
         (item) => item.id === action.payload.id
       );
-      if (index > 0) {
-        [state.ingredients[index], state.ingredients[index - 1]] = [
-          state.ingredients[index - 1],
+
+      if (index < state.ingredients.length - 1) {
+        [state.ingredients[index], state.ingredients[index + 1]] = [
+          state.ingredients[index + 1],
           state.ingredients[index]
         ];
       }
