@@ -2,25 +2,10 @@ import {
   ordersReducer,
   fetchOrders,
   fetchFeeds,
-  fetchOrderData
+  fetchOrderData,
+  initialState
 } from './orderSlice';
 import type { TOrder } from '@utils-types';
-
-type TInitialState = {
-  orders: TOrder[];
-  error: string | null;
-  isLoading: boolean;
-  feed: { total: number; totalToday: number };
-  orderData: null | TOrder;
-};
-
-const initialState: TInitialState = {
-  orders: [],
-  error: null,
-  isLoading: false,
-  feed: { total: 0, totalToday: 0 },
-  orderData: null
-};
 
 const sampleOrder: TOrder = {
   _id: 'order-1',
@@ -43,7 +28,6 @@ describe('orderSlice reducer', () => {
     expect(ordersReducer(undefined, { type: '' })).toEqual(initialState);
   });
 
-  /* -------- fetchOrders -------- */
 
   test('fetchOrders.pending', () => {
     const action = { type: fetchOrders.pending.type };
@@ -85,8 +69,6 @@ describe('orderSlice reducer', () => {
       orders: []
     });
   });
-
-  /* -------- fetchFeeds -------- */
 
   test('fetchFeeds.pending', () => {
     const action = { type: fetchFeeds.pending.type };
@@ -136,7 +118,6 @@ describe('orderSlice reducer', () => {
     });
   });
 
-  /* -------- fetchOrderData -------- */
 
   test('fetchOrderData.pending', () => {
     const action = { type: fetchOrderData.pending.type };
@@ -156,7 +137,6 @@ describe('orderSlice reducer', () => {
     };
     const state = ordersReducer(initialState, action);
 
-    // предполагаем, что слайс кладёт найденный заказ в orderData
     expect(state.isLoading).toBe(false);
     expect(state.error).toBeNull();
     expect(state.orderData).toEqual(sampleOrder);

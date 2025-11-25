@@ -1,4 +1,4 @@
-import { userReducer } from './userSlice';
+import { initialState, TInitialState, userReducer } from './userSlice';
 import {
   registerUser,
   loginUser,
@@ -8,32 +8,6 @@ import {
   logoutUser
 } from './userSliceApi';
 import type { TUser } from '../../../utils/types';
-
-type TInitialState = {
-  isLoading: boolean;
-  userData: TUser | null;
-  registerError: null | string;
-  loginError: null | string;
-  logoutError: null | string;
-  updateUserError: null | string;
-  forgotPassError: null | string;
-  userDataError: null | string;
-  isAuthenticated: boolean;
-  authenticatedError: null | string;
-};
-
-const initialState: TInitialState = {
-  isLoading: false,
-  userData: null,
-  registerError: null,
-  loginError: null,
-  logoutError: null,
-  updateUserError: null,
-  forgotPassError: null,
-  userDataError: null,
-  isAuthenticated: false,
-  authenticatedError: null
-};
 
 const fakeUser: TUser = {
   email: 'test@example.com',

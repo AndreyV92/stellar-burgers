@@ -1,12 +1,12 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '../../../utils/types';
 
-type TInitialState = {
+export type TInitialState = {
   ingredients: TConstructorIngredient[];
   bun: TConstructorIngredient | null;
 };
 
-const initialState: TInitialState = {
+export const initialState: TInitialState = {
   ingredients: [],
   bun: null
 };

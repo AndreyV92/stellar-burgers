@@ -1,17 +1,6 @@
 import { ingridientReducer, fetchIngredients } from './ingridientsSlice';
 import type { TIngredient } from '../../../utils/types';
-
-type TInitialState = {
-  listItem: TIngredient[];
-  isLoading: boolean;
-  error: null | string;
-};
-
-const initialState: TInitialState = {
-  listItem: [],
-  isLoading: false,
-  error: null
-};
+import { initialState } from './ingridientsSlice';
 
 const sampleIngredients: TIngredient[] = [
   {

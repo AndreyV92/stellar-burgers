@@ -11,15 +11,10 @@ import type {
   TIngredient
 } from '../../../utils/types';
 
-type TInitialState = {
-  ingredients: TConstructorIngredient[];
-  bun: TConstructorIngredient | null;
-};
+import { initialState } from './makeBurgerSlise';
+import { TInitialState } from './makeBurgerSlise';
 
-const emptyState: TInitialState = {
-  ingredients: [],
-  bun: null
-};
+
 
 const bun: TConstructorIngredient = {
   _id: 'bun-1',
@@ -68,17 +63,17 @@ const ingredientTwo: TConstructorIngredient = {
 
 describe('makeBurgerSlice reducer', () => {
   test('должен вернуть initial state', () => {
-    expect(makeBurgerReducer(undefined, { type: '' })).toEqual(emptyState);
+    expect(makeBurgerReducer(undefined, { type: '' })).toEqual(initialState);
   });
 
   test('addItem: добавляет булку', () => {
-    const state = makeBurgerReducer(emptyState, addItem(bun as TIngredient));
+    const state = makeBurgerReducer(initialState, addItem(bun as TIngredient));
     expect(state.bun?._id).toBe(bun._id);
   });
 
   test('addItem: добавляет начинку', () => {
     const state = makeBurgerReducer(
-      emptyState,
+      initialState,
       addItem(ingredientOne as TIngredient)
     );
     expect(state.ingredients).toHaveLength(1);
@@ -124,7 +119,6 @@ describe('makeBurgerSlice reducer', () => {
       downItem({ id: ingredientTwo.id })
     );
 
-    // ожидаем, что второй ингредиент уйдёт вниз
     expect(state.ingredients).toEqual([ingredientOne, ingredientTwo]);
   });
 
@@ -135,6 +129,6 @@ describe('makeBurgerSlice reducer', () => {
     };
 
     const state = makeBurgerReducer(filledState, cleanIngridients());
-    expect(state).toEqual(emptyState);
+    expect(state).toEqual(initialState);
   });
 });

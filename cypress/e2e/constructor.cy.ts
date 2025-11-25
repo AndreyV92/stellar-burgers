@@ -1,37 +1,38 @@
-// Общие константы по именам ингредиентов
 const SELECTOR_BUN = 'Краторная булка N-200i';
 const SELECTOR_MAIN_1 = 'Биокотлета из марсианской Магнолии';
 const SELECTOR_MAIN_2 = 'Филе Люминесцентного тетраодонтимформа';
 
-// Хелпер: заходим на главную и подменяем /ingredients фикстурой
 const visitWithIngredients = () => {
   cy.intercept('GET', '**/ingredients', { fixture: 'ingredients.json' }).as(
     'getIngredients'
   );
 
-  cy.visit('/');           // baseUrl берётся из cypress.config.{ts,js}
+  cy.visit('/');
 
   cy.wait('@getIngredients');
 };
 
-/* ------------------------------------------------------------------ */
-/*  BurgerIngredientUI                                                */
-/* ------------------------------------------------------------------ */
+afterEach(() => {
+  cy.clearCookies();
+  cy.clearLocalStorage();
+  cy.clearAllSessionStorage();
+});
 
 describe('BurgerIngredientUI component', () => {
   beforeEach(() => {
     visitWithIngredients();
   });
 
-  it('открывает модалку при клике на ингредиент', () => {
+  it('открывает модалку и показывает данные ингредиента', () => {
     cy.contains(SELECTOR_BUN).click();
-    cy.contains('Детали ингредиента').should('exist');
+
+    cy.contains(SELECTOR_BUN).should('exist');
+    cy.contains('Калории, ккал').should('exist');
+    cy.contains('Белки, г').should('exist');
+    cy.contains('Жиры, г').should('exist');
+    cy.contains('Углеводы, г').should('exist');
   });
 });
-
-/* ------------------------------------------------------------------ */
-/*  BurgerConstructorUI                                               */
-/* ------------------------------------------------------------------ */
 
 describe('BurgerConstructorUI component', () => {
   beforeEach(() => {
@@ -42,18 +43,10 @@ describe('BurgerConstructorUI component', () => {
     cy.contains(SELECTOR_BUN).parent().contains('Добавить').click();
     cy.contains(SELECTOR_MAIN_1).parent().contains('Добавить').click();
 
-    // тут селекторы подставь под свои (data-testid очень удобны)
-    cy.get('[data-testid="constructor-bun"]').should('contain', SELECTOR_BUN);
-    cy.get('[data-testid="constructor-fillings"]').should(
-      'contain',
-      SELECTOR_MAIN_1
-    );
+    cy.get('.constructor-element').contains(SELECTOR_BUN).should('exist');
+    cy.get('.constructor-element').contains(SELECTOR_MAIN_1).should('exist');
   });
 });
-
-/* ------------------------------------------------------------------ */
-/*  IngredientDetails (по роуту /ingredients/:id)                     */
-/* ------------------------------------------------------------------ */
 
 describe('IngredientDetails route component', () => {
   it('открывает компонент с данными ингредиента по прямой ссылке', () => {
@@ -61,16 +54,17 @@ describe('IngredientDetails route component', () => {
       'getIngredients'
     );
 
-    cy.visit('/ingredients/643d69a5c3f7b9001cfa093d');
+    // id Краторной булки из fixtures/ingredients.json
+    cy.visit('/ingredients/643d69a5c3f7b9001cfa093c');
     cy.wait('@getIngredients');
 
-    cy.contains('Детали ингредиента').should('exist');
+    cy.contains(SELECTOR_BUN).should('exist');
+    cy.contains('Калории, ккал').should('exist');
+    cy.contains('Белки, г').should('exist');
+    cy.contains('Жиры, г').should('exist');
+    cy.contains('Углеводы, г').should('exist');
   });
 });
-
-/* ------------------------------------------------------------------ */
-/*  Modal                                                             */
-/* ------------------------------------------------------------------ */
 
 describe('Modal component', () => {
   beforeEach(() => {
@@ -79,18 +73,14 @@ describe('Modal component', () => {
 
   it('появляется и закрывается по Esc', () => {
     cy.contains(SELECTOR_BUN).click();
-    cy.contains('Детали ингредиента').should('exist');
 
-    // закрываем модалку клавишей Escape
+    cy.contains('Калории, ккал').should('exist');
+
     cy.get('body').type('{esc}');
 
-    cy.contains('Детали ингредиента').should('not.exist');
+    cy.contains('Калории, ккал').should('not.exist');
   });
 });
-
-/* ------------------------------------------------------------------ */
-/*  AppHeader                                                         */
-/* ------------------------------------------------------------------ */
 
 describe('AppHeader component', () => {
   it('содержит ссылку на "Конструктор"', () => {
@@ -99,41 +89,33 @@ describe('AppHeader component', () => {
   });
 });
 
-/* ------------------------------------------------------------------ */
-/*  Order flow                                                        */
-/* ------------------------------------------------------------------ */
-
 describe('Order flow', () => {
   beforeEach(() => {
     cy.setCookie('accessToken', 'Bearer test-token');
+    cy.window().then((win) => {
+      win.localStorage.setItem('accessToken', 'Bearer test-token');
+      win.localStorage.setItem('refreshToken', 'test-refresh-token');
+    });
 
     cy.intercept('GET', '**/ingredients', { fixture: 'ingredients.json' }).as(
       'getIngredients'
     );
 
-    cy.visit('/', {
-      onBeforeLoad(win) {
-        const originalFetch = win.fetch; // сохраним оригинальный fetch
+    cy.intercept('GET', '**/auth/user', { fixture: 'user.json' }).as('getUser');
 
-        cy.stub(win, 'fetch').callsFake((url: RequestInfo | URL, options) => {
-          const urlStr = url.toString();
-
-          // перехватываем создание заказа
-          if (urlStr.includes('/orders')) {
-            return Promise.resolve({
-              ok: true,
-              json: () =>
-                Promise.resolve({
-                  order: { number: 123456 }
-                })
-            } as Response);
-          }
-
-          // все остальные запросы идут как обычно
-          return originalFetch(url, options);
-        });
+    // перехват создания заказа БЕЗ фикстуры, ответ зашит прямо в тест
+    cy.intercept('POST', '**/orders', {
+      statusCode: 200,
+      body: {
+        success: true,
+        name: 'Test',
+        order: {
+          number: 69289
+        }
       }
-    });
+    }).as('createOrder');
+
+    cy.visit('/');
 
     cy.wait('@getIngredients');
   });
@@ -148,7 +130,8 @@ describe('Order flow', () => {
       .should('not.be.disabled')
       .click();
 
-    // ожидаем, что откроется модалка с номером заказа
-    cy.contains('123456').should('exist');
+    cy.wait('@createOrder');
+
+    cy.contains('69289').should('exist');
   });
 });
