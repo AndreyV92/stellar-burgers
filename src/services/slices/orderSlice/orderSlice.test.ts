@@ -14,7 +14,7 @@ const sampleOrder: TOrder = {
   name: 'Тестовый бургер',
   createdAt: '2024-02-17T13:10:27.612Z',
   updatedAt: '2024-02-17T13:10:28.088Z',
-  number: 100,
+  number: 100
 };
 
 const feedsPayload = {
@@ -27,7 +27,6 @@ describe('orderSlice reducer', () => {
   test('должен вернуть initial state', () => {
     expect(ordersReducer(undefined, { type: '' })).toEqual(initialState);
   });
-
 
   test('fetchOrders.pending', () => {
     const action = { type: fetchOrders.pending.type };
@@ -117,7 +116,6 @@ describe('orderSlice reducer', () => {
       error: 'Ошибка загрузки фида'
     });
   });
-
 
   test('fetchOrderData.pending', () => {
     const action = { type: fetchOrderData.pending.type };

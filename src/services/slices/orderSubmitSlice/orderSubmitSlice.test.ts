@@ -7,7 +7,6 @@ import {
 } from './orderSubmitSlice';
 import type { TOrder } from '@utils-types';
 
-
 const sampleOrder: TOrder = {
   _id: 'order-1',
   ingredients: ['1', '2'],
@@ -15,7 +14,7 @@ const sampleOrder: TOrder = {
   name: 'Тестовый заказ',
   createdAt: '2024-02-17T13:10:27.612Z',
   updatedAt: '2024-02-17T13:10:28.088Z',
-  number: 101,
+  number: 101
 };
 
 describe('orderSubmitSlice reducer', () => {

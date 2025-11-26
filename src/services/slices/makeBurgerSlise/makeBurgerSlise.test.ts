@@ -6,15 +6,10 @@ import {
   downItem,
   cleanIngridients
 } from './makeBurgerSlise';
-import type {
-  TConstructorIngredient,
-  TIngredient
-} from '../../../utils/types';
+import type { TConstructorIngredient, TIngredient } from '../../../utils/types';
 
 import { initialState } from './makeBurgerSlise';
 import { TInitialState } from './makeBurgerSlise';
-
-
 
 const bun: TConstructorIngredient = {
   _id: 'bun-1',
@@ -86,10 +81,7 @@ describe('makeBurgerSlice reducer', () => {
       ingredients: [ingredientOne, ingredientTwo]
     };
 
-    const state = makeBurgerReducer(
-      startState,
-      deleteItem({ _id: 'main-2' })
-    );
+    const state = makeBurgerReducer(startState, deleteItem({ _id: 'main-2' }));
 
     expect(state.ingredients).toEqual([ingredientOne]);
   });
