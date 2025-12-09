@@ -10,7 +10,7 @@ import {
   logoutUser
 } from './userSliceApi';
 
-type TInitialState = {
+export type TInitialState = {
   isLoading: boolean;
   userData: TUser | null;
   registerError: null | string;
@@ -23,7 +23,7 @@ type TInitialState = {
   authenticatedError: null | string;
 };
 
-const initialState: TInitialState = {
+export const initialState: TInitialState = {
   isLoading: false,
   userData: null,
   registerError: null,

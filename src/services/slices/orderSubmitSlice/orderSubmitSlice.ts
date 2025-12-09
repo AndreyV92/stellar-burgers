@@ -2,7 +2,7 @@ import { getOrdersApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
-type TInitialState = {
+export type TInitialState = {
   error: string | null;
   isLoading: boolean;
   orderData: TOrder | null;
@@ -10,7 +10,7 @@ type TInitialState = {
   orderRequest: boolean;
 };
 
-const initialState: TInitialState = {
+export const initialState: TInitialState = {
   error: null,
   isLoading: false,
   orderData: null,

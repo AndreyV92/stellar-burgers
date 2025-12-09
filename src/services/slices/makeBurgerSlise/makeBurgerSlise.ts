@@ -1,12 +1,12 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '../../../utils/types';
 
-type TInitialState = {
+export type TInitialState = {
   ingredients: TConstructorIngredient[];
   bun: TConstructorIngredient | null;
 };
 
-const initialState: TInitialState = {
+export const initialState: TInitialState = {
   ingredients: [],
   bun: null
 };
@@ -48,9 +48,10 @@ export const makeBurgerSlice = createSlice({
       const index = state.ingredients.findIndex(
         (item) => item.id === action.payload.id
       );
-      if (index > 0) {
-        [state.ingredients[index], state.ingredients[index - 1]] = [
-          state.ingredients[index - 1],
+
+      if (index < state.ingredients.length - 1) {
+        [state.ingredients[index], state.ingredients[index + 1]] = [
+          state.ingredients[index + 1],
           state.ingredients[index]
         ];
       }

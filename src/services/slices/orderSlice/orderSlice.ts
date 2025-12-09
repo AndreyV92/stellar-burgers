@@ -2,7 +2,7 @@ import { getFeedsApi, getOrderByNumberApi, getOrdersApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
-type TInitialState = {
+export type TInitialState = {
   orders: TOrder[];
   error: string | null;
   isLoading: boolean;
@@ -10,7 +10,7 @@ type TInitialState = {
   orderData: null | TOrder;
 };
 
-const initialState: TInitialState = {
+export const initialState: TInitialState = {
   orders: [],
   error: null,
   isLoading: false,
@@ -84,7 +84,8 @@ const orderSlice = createSlice({
       .addCase(fetchOrderData.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        // state.orderData = action.payload.orders.find((order)=> order._id === );
+        // предполагаем, что API вернёт объект { orders: TOrder[] }
+        state.orderData = action.payload.orders[0] ?? null;
       });
   }
 });
